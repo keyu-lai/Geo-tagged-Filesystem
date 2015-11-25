@@ -4,7 +4,7 @@
  * gpsd.h
  *
  * Columbia University
- * COMS W4118 Fall 2014
+ * COMS W4118 Fall 2015
  * Homework 6
  *
  */
