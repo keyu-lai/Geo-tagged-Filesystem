@@ -2219,12 +2219,14 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
 	if (retval)
 		goto end_unlink;
 	dir->i_ctime = dir->i_mtime = ext4_current_time(dir);
+	ext4_set_gps_location(dir);
 	ext4_update_dx_flag(dir);
 	ext4_mark_inode_dirty(handle, dir);
 	drop_nlink(inode);
 	if (!inode->i_nlink)
 		ext4_orphan_add(handle, inode);
 	inode->i_ctime = ext4_current_time(inode);
+	ext_set_gps_location(inode);
 	ext4_mark_inode_dirty(handle, inode);
 	retval = 0;
 
@@ -2364,6 +2366,7 @@ retry:
 		ext4_handle_sync(handle);
 
 	inode->i_ctime = ext4_current_time(inode);
+	ext4_set_gps_location(inode); /* W4118 Assignment 6*/
 	ext4_inc_count(handle, inode);
 	ihold(inode);
 
@@ -2473,6 +2476,7 @@ static int ext4_rename(struct inode *old_dir, struct dentry *old_dentry,
 		new_dir->i_version++;
 		new_dir->i_ctime = new_dir->i_mtime =
 					ext4_current_time(new_dir);
+		ext4_set_gps_location(newdir);
 		ext4_mark_inode_dirty(handle, new_dir);
 		BUFFER_TRACE(new_bh, "call ext4_handle_dirty_metadata");
 		retval = ext4_handle_dirty_metadata(handle, new_dir, new_bh);
@@ -2489,6 +2493,7 @@ static int ext4_rename(struct inode *old_dir, struct dentry *old_dentry,
 	 * rename.
 	 */
 	old_inode->i_ctime = ext4_current_time(old_inode);
+	ext4_set_gps_location(old_inode);
 	ext4_mark_inode_dirty(handle, old_inode);
 
 	/*
@@ -2522,8 +2527,10 @@ static int ext4_rename(struct inode *old_dir, struct dentry *old_dentry,
 	if (new_inode) {
 		ext4_dec_count(handle, new_inode);
 		new_inode->i_ctime = ext4_current_time(new_inode);
+		ext4_set_gps_location(new_inode);
 	}
 	old_dir->i_ctime = old_dir->i_mtime = ext4_current_time(old_dir);
+	ext4_set_gps_location(old_dir);
 	ext4_update_dx_flag(old_dir);
 	if (dir_bh) {
 		PARENT_INO(dir_bh->b_data, new_dir->i_sb->s_blocksize) =
@@ -2545,6 +2552,7 @@ static int ext4_rename(struct inode *old_dir, struct dentry *old_dentry,
 			ext4_mark_inode_dirty(handle, new_dir);
 		}
 	}
+
 	ext4_mark_inode_dirty(handle, old_dir);
 	if (new_inode) {
 		ext4_mark_inode_dirty(handle, new_inode);
@@ -2587,6 +2595,8 @@ const struct inode_operations ext4_dir_inode_operations = {
 #endif
 	.get_acl	= ext4_get_acl,
 	.fiemap         = ext4_fiemap,
+	.set_gps_location = ext4_set_gps_location,
+	.get_gps_location = ext4_get_gpslocation,
 };
 
 const struct inode_operations ext4_special_inode_operations = {
@@ -2598,4 +2608,6 @@ const struct inode_operations ext4_special_inode_operations = {
 	.removexattr	= generic_removexattr,
 #endif
 	.get_acl	= ext4_get_acl,
+	.set_gps_location = ext4_set_gps_location,
+	.get_gps_location = ext4_get_gpslocation,
 };

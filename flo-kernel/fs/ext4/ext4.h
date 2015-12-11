@@ -673,6 +673,11 @@ struct ext4_inode {
 	__le32  i_crtime;       /* File Creation time */
 	__le32  i_crtime_extra; /* extra FileCreationtime (nsec << 2 | epoch) */
 	__le32  i_version_hi;	/* high 32 bits for 64-bit version */
+	__u64  i_latitude;
+	__u64  i_longitude;
+	__u64  i_accuracy;
+	__u32  i_coord_age;
+	rwlock_t  i_gps_lock;
 };
 
 struct move_extent {
@@ -680,8 +685,8 @@ struct move_extent {
 	__u32 donor_fd;		/* donor file descriptor */
 	__u64 orig_start;	/* logical start offset in block for orig */
 	__u64 donor_start;	/* logical start offset in block for donor */
-	__u64 len;		/* block length to be moved */
-	__u64 moved_len;	/* moved block length */
+	__u32  len;		/* block length to be moved */
+	__u32  moved_len;	/* moved block length */
 };
 
 #define EXT4_EPOCH_BITS 2
@@ -1918,6 +1923,10 @@ extern qsize_t *ext4_get_reserved_space(struct inode *inode);
 extern void ext4_da_update_reserve_space(struct inode *inode,
 					int used, int quota_claim);
 
+/*  gps.c */
+extern int ext4_set_gps_location(struct inode *inode);
+extern int ext4_get_gps_location(struct inode *, struct gps_location *);
+
 /* indirect.c */
 extern int ext4_ind_map_blocks(handle_t *handle, struct inode *inode,
 				struct ext4_map_blocks *map, int flags);
@@ -2366,6 +2375,8 @@ extern int ext4_resize_begin(struct super_block *sb);
 extern void ext4_resize_end(struct super_block *sb);
 
 #endif	/* __KERNEL__ */
+
+#define EXT4_MOUNT_GPS_AWARE_INODE	0x2000000
 
 #include "ext4_extents.h"
 

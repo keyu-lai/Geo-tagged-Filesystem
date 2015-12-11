@@ -3468,6 +3468,38 @@ const struct inode_operations page_symlink_inode_operations = {
 	.put_link	= page_put_link,
 };
 
+int vfs_get_gps_location(struct inode *inode, struct gps_location *location)
+{
+	if (!inode->i_op->get_gps_location)
+		return -EPERM;
+
+	spin_lock(&inode->i_lock);
+	if (inode->i_op->get_gps_location(inode, location) < 0) {
+		spin_unlock(&inode->i_lock);
+		return -EFAULT;
+	}
+
+	spin_unlock(&inode->i_lock);
+
+	return 0;
+}
+
+int vfs_set_gps_location(struct inode *inode)
+{
+	if (!inode->i_op->set_gps_location)
+		return -EPERM;
+
+	spin_lock(&inode->i_lock);
+	if (inode->i_op->set_gps_location(inode) < 0) {
+		spin_unlock(&inode->i_lock);
+		return -EFAULT;
+	}
+
+	spin_unlock(&inode->i_lock);
+
+	return 0;
+}
+
 EXPORT_SYMBOL(user_path_at);
 EXPORT_SYMBOL(follow_down_one);
 EXPORT_SYMBOL(follow_down);
@@ -3499,3 +3531,5 @@ EXPORT_SYMBOL(vfs_symlink);
 EXPORT_SYMBOL(vfs_unlink);
 EXPORT_SYMBOL(dentry_unhash);
 EXPORT_SYMBOL(generic_readlink);
+EXPORT_SYMBOL(vfs_get_gps_location);
+EXPORT_SYMBOL(vfs_set_gps_location)

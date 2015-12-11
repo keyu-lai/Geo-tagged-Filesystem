@@ -1665,6 +1665,8 @@ struct inode_operations {
 	void (*truncate_range)(struct inode *, loff_t, loff_t);
 	int (*fiemap)(struct inode *, struct fiemap_extent_info *, u64 start,
 		      u64 len);
+	int (*set_gps_location)(struct inode *);
+	int (*get_gps_location)(struct inode *, struct gps_location *);
 } ____cacheline_aligned;
 
 struct seq_file;
@@ -1681,6 +1683,10 @@ extern ssize_t vfs_readv(struct file *, const struct iovec __user *,
 		unsigned long, loff_t *);
 extern ssize_t vfs_writev(struct file *, const struct iovec __user *,
 		unsigned long, loff_t *);
+/* W4118 VFS helper functions */
+extern int vfs_get_gps_location(struct inode *, struct gps_location *);
+extern int vfs_set_gps_location(struct inode *);
+
 
 struct super_operations {
    	struct inode *(*alloc_inode)(struct super_block *sb);

@@ -1265,6 +1265,7 @@ static const match_table_t tokens = {
 	{Opt_removed, "noreservation"}, /* mount option from ext2/3 */
 	{Opt_removed, "journal=%u"},	/* mount option from ext2/3 */
 	{Opt_err, NULL},
+	{Opt_gps_aware_inode, "gps_aware_inode"} /* W4118 Assignment 6 GPS mount option*/
 };
 
 static ext4_fsblk_t get_sb_block(void **data)
