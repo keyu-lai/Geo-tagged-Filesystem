@@ -10,7 +10,7 @@
 #include <linux/ioctl.h>
 #include <linux/blk_types.h>
 #include <linux/types.h>
-
+#include <linux/gps.h>
 /*
  * It's silly to have NR_OPEN bigger than NR_FILE, but you can change
  * the file limit at runtime and only root can increase the per-process
@@ -1669,6 +1669,10 @@ struct inode_operations {
 	int (*get_gps_location)(struct inode *, struct gps_location *);
 } ____cacheline_aligned;
 
+/* W4118 VFS helper functions */
+extern int vfs_get_gps_location(struct inode *, struct gps_location *);
+extern int vfs_set_gps_location(struct inode *);
+
 struct seq_file;
 
 ssize_t rw_copy_check_uvector(int type, const struct iovec __user * uvector,
@@ -1683,10 +1687,6 @@ extern ssize_t vfs_readv(struct file *, const struct iovec __user *,
 		unsigned long, loff_t *);
 extern ssize_t vfs_writev(struct file *, const struct iovec __user *,
 		unsigned long, loff_t *);
-/* W4118 VFS helper functions */
-extern int vfs_get_gps_location(struct inode *, struct gps_location *);
-extern int vfs_set_gps_location(struct inode *);
-
 
 struct super_operations {
    	struct inode *(*alloc_inode)(struct super_block *sb);

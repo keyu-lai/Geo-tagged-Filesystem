@@ -1185,7 +1185,7 @@ enum {
 	Opt_nomblk_io_submit, Opt_block_validity, Opt_noblock_validity,
 	Opt_inode_readahead_blks, Opt_journal_ioprio,
 	Opt_dioread_nolock, Opt_dioread_lock,
-	Opt_discard, Opt_nodiscard, Opt_init_itable, Opt_noinit_itable,
+	Opt_discard, Opt_nodiscard, Opt_init_itable, Opt_noinit_itable, Opt_gps_aware_inode,
 };
 
 static const match_table_t tokens = {

@@ -2226,7 +2226,7 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
 	if (!inode->i_nlink)
 		ext4_orphan_add(handle, inode);
 	inode->i_ctime = ext4_current_time(inode);
-	ext_set_gps_location(inode);
+	ext4_set_gps_location(inode);
 	ext4_mark_inode_dirty(handle, inode);
 	retval = 0;
 
@@ -2476,7 +2476,7 @@ static int ext4_rename(struct inode *old_dir, struct dentry *old_dentry,
 		new_dir->i_version++;
 		new_dir->i_ctime = new_dir->i_mtime =
 					ext4_current_time(new_dir);
-		ext4_set_gps_location(newdir);
+		ext4_set_gps_location(new_dir);
 		ext4_mark_inode_dirty(handle, new_dir);
 		BUFFER_TRACE(new_bh, "call ext4_handle_dirty_metadata");
 		retval = ext4_handle_dirty_metadata(handle, new_dir, new_bh);
@@ -2596,7 +2596,7 @@ const struct inode_operations ext4_dir_inode_operations = {
 	.get_acl	= ext4_get_acl,
 	.fiemap         = ext4_fiemap,
 	.set_gps_location = ext4_set_gps_location,
-	.get_gps_location = ext4_get_gpslocation,
+	.get_gps_location = ext4_get_gps_location,
 };
 
 const struct inode_operations ext4_special_inode_operations = {
@@ -2609,5 +2609,5 @@ const struct inode_operations ext4_special_inode_operations = {
 #endif
 	.get_acl	= ext4_get_acl,
 	.set_gps_location = ext4_set_gps_location,
-	.get_gps_location = ext4_get_gpslocation,
+	.get_gps_location = ext4_get_gps_location,
 };
