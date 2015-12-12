@@ -8,7 +8,7 @@
  * Homework 6
  *
  */
-
+#include <unistd.h>
 #include <sys/syscall.h>
 
 struct gps_location {

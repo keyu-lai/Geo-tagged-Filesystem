@@ -43,6 +43,7 @@ SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc) {
 	upd_tim_stm = CURRENT_TIME_SEC.tv_sec;
 	write_unlock(&cur_gloc_lock);
 
+	printk(KERN_DEBUG "long:%d unsigned long:%d int:%d unsigned int:%d\n",sizeof(long), sizeof(unsigned long),sizeof(int), sizeof(unsigned int));
 	return 0;
 }
 
@@ -55,6 +56,9 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, path_name, struct gps_loc
 
 	if (loc == NULL)
 		return -EINVAL;
+
+	if (accuracy == -1)
+		return -ENODEV;
 
 	if (user_path_at(AT_FDCWD, path_name, AT_SYMLINK_FOLLOW | !LOOKUP_FOLLOW, &fp))
 		return -EFAULT;

@@ -985,6 +985,7 @@ static void init_once(void *foo)
 #endif
 	init_rwsem(&ei->i_data_sem);
 	inode_init_once(&ei->vfs_inode);
+	rwlock_init(&ei->i_gps_lock);
 }
 
 static int init_inodecache(void)
@@ -1185,7 +1186,8 @@ enum {
 	Opt_nomblk_io_submit, Opt_block_validity, Opt_noblock_validity,
 	Opt_inode_readahead_blks, Opt_journal_ioprio,
 	Opt_dioread_nolock, Opt_dioread_lock,
-	Opt_discard, Opt_nodiscard, Opt_init_itable, Opt_noinit_itable, Opt_gps_aware_inode,
+	Opt_discard, Opt_nodiscard, Opt_init_itable, Opt_noinit_itable,
+	Opt_gps_aware_inode,
 };
 
 static const match_table_t tokens = {
@@ -1264,8 +1266,8 @@ static const match_table_t tokens = {
 	{Opt_removed, "reservation"},	/* mount option from ext2/3 */
 	{Opt_removed, "noreservation"}, /* mount option from ext2/3 */
 	{Opt_removed, "journal=%u"},	/* mount option from ext2/3 */
+	{Opt_gps_aware_inode, "gps_aware_inode"}, /* mount option for W4118 assignment*/
 	{Opt_err, NULL},
-	{Opt_gps_aware_inode, "gps_aware_inode"} /* W4118 Assignment 6 GPS mount option*/
 };
 
 static ext4_fsblk_t get_sb_block(void **data)
@@ -1440,7 +1442,8 @@ static const struct mount_opts {
 	{Opt_jqfmt_vfsold, QFMT_VFS_OLD, MOPT_QFMT},
 	{Opt_jqfmt_vfsv0, QFMT_VFS_V0, MOPT_QFMT},
 	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
-	{Opt_err, 0, 0}
+	{Opt_err, 0, 0},
+	{Opt_gps_aware_inode, EXT4_MOUNT_GPS_AWARE_INODE, MOPT_SET}
 };
 
 static int handle_mount_opt(struct super_block *sb, char *opt, int token,
@@ -1498,6 +1501,9 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 		if (arg < 0 || arg > 7)
 			return -1;
 		*journal_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, arg);
+		return 1;
+	case Opt_gps_aware_inode:
+		printk(KERN_DEBUG "Mount gps_aware_node\n");
 		return 1;
 	}
 
