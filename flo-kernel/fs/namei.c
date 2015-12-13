@@ -3472,11 +3472,8 @@ long vfs_get_gps_location(struct inode *inode, struct gps_location *location)
 {
 	long dage;
 
-	printk("Enter vfs_gps_location\n");
 	if (!inode->i_op->get_gps_location)
 		return -EPERM;
-	
-	printk("Before the lock vfs_gps_location\n");
 
 	spin_lock(&inode->i_lock);
 	dage = inode->i_op->get_gps_location(inode, location);

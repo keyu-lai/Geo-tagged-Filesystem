@@ -977,6 +977,9 @@ static void ext4_destroy_inode(struct inode *inode)
 
 static void init_once(void *foo)
 {
+	long fzero =0;
+	long long dzero = 0;
+
 	struct ext4_inode_info *ei = (struct ext4_inode_info *) foo;
 
 	INIT_LIST_HEAD(&ei->i_orphan);
@@ -985,7 +988,12 @@ static void init_once(void *foo)
 #endif
 	init_rwsem(&ei->i_data_sem);
 	inode_init_once(&ei->vfs_inode);
+	/* W4118 HW6 Initialization*/
 	rwlock_init(&ei->i_gps_lock);
+	memcpy(&ei->i_latitude, &dzero, sizeof(dzero));
+	memcpy(&ei->i_longitude, &dzero, sizeof(dzero));
+	memcpy(&ei->i_accuracy, &dzero, sizeof(fzero));
+	memcpy(&ei->i_coord_age, &dzero, sizeof(fzero));
 }
 
 static int init_inodecache(void)

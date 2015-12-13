@@ -1762,7 +1762,7 @@ retry:
 		ext4_set_aops(inode);
 		err = ext4_add_nondir(handle, dentry, inode);
 	}
-	ext4_set_gps_location(inode);
+	vfs_set_gps_location(inode);
 	ext4_journal_stop(handle);
 	if (err == -ENOSPC && ext4_should_retry_alloc(dir->i_sb, &retries))
 		goto retry;
@@ -1839,6 +1839,7 @@ retry:
 	inode->i_op = &ext4_dir_inode_operations;
 	inode->i_fop = &ext4_dir_operations;
 	inode->i_size = EXT4_I(inode)->i_disksize = inode->i_sb->s_blocksize;
+	vfs_set_gps_location(inode);
 	dir_block = ext4_bread(handle, inode, 0, 1, &err);
 	if (!dir_block)
 		goto out_clear_inode;
@@ -2225,7 +2226,7 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
 	if (!inode->i_nlink)
 		ext4_orphan_add(handle, inode);
 	inode->i_ctime = ext4_current_time(inode);
-	ext4_set_gps_location(inode);
+	vfs_set_gps_location(inode);
 	ext4_mark_inode_dirty(handle, inode);
 	retval = 0;
 
@@ -2365,7 +2366,7 @@ retry:
 		ext4_handle_sync(handle);
 
 	inode->i_ctime = ext4_current_time(inode);
-	ext4_set_gps_location(inode);
+	vfs_set_gps_location(inode);
 	ext4_inc_count(handle, inode);
 	ihold(inode);
 
@@ -2475,7 +2476,7 @@ static int ext4_rename(struct inode *old_dir, struct dentry *old_dentry,
 		new_dir->i_version++;
 		new_dir->i_ctime = new_dir->i_mtime =
 					ext4_current_time(new_dir);
-		ext4_set_gps_location(new_dir);
+		vfs_set_gps_location(new_dir);
 		ext4_mark_inode_dirty(handle, new_dir);
 		BUFFER_TRACE(new_bh, "call ext4_handle_dirty_metadata");
 		retval = ext4_handle_dirty_metadata(handle, new_dir, new_bh);

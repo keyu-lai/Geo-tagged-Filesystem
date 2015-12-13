@@ -10,13 +10,14 @@
 
 int main(int argc, char **argv)
 {
-	char *opt, *path;
+	char *opt, *path, *url;
 	char copt[STR_LEN];
 	int dage, i, slen;
 	size_t br = STR_LEN;
 	struct gps_location rloc;
 
 	opt = (char *)malloc(STR_LEN * sizeof(char));
+	url = "http://maps.google.com/maps?q=";
 
 	while (strncmp(copt, "exit", 4) != 0) {
 		printf("Enter path name: ");
@@ -48,10 +49,11 @@ int main(int argc, char **argv)
 				continue;
 			}
 
-			printf("File name: %s\n",opt);
-			printf("Created at lat : %f\n",rloc.latitude);
-			printf("Created at lod : %f\n",rloc.longitude);
+			printf("File name GPS Stat: %s",opt);
+			printf("Latitude : %f\n",rloc.latitude);
+			printf("Longitude : %f\n",rloc.longitude);
 			printf("Data Accuracy: %f\n",rloc.accuracy);
+			printf("Google Map Location: %s%f,%f\n",url,rloc.latitude,rloc.longitude);
 			printf("Data age: %d\n",dage);
 		}
 	}
