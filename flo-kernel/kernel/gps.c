@@ -43,6 +43,7 @@ SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc) {
 	write_lock(&cur_gloc_lock);
 	memcpy(&cur_gloc, &tmp_loc, sizeof(tmp_loc));
 	upd_tim_stm = CURRENT_TIME_SEC.tv_sec;
+	printk("Daemon set data at %ld\n",upd_tim_stm);
 	write_unlock(&cur_gloc_lock);
 
 	return 0;
@@ -77,11 +78,7 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, path_name, struct gps_loc
 		printk(KERN_DEBUG "Wrong name!");
 	}
 
-	printk("%s::%d\n",path_name,strlen(path_name));
-	//luf = 0;
-	//luf |= (LOOKUP_FOLLOW);
-	//if (user_path_at(AT_FDCWD, path_name, luf, &fp) < 0) {
-	if (kern_path(path_name, LOOKUP_FOLLOW | LOOKUP_AUTOMOUNT, &fp) != 0) {
+	if (user_path_at(AT_FDCWD, path_name, LOOKUP_FOLLOW, &fp) < 0) {
 		printk(KERN_DEBUG "wrong path\n");
 		return -EFAULT;
 	}
@@ -98,6 +95,7 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, path_name, struct gps_loc
 		printk(KERN_DEBUG "Negative Status\n");
 		return -EFAULT;
 	}
+	printk("get data age:%d\n",cage);
 
 	return cage;
 }

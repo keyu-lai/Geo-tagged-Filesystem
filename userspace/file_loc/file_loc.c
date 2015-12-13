@@ -26,10 +26,6 @@ int main(int argc, char **argv)
 			path = (char *)malloc(slen * sizeof(char));
 			strncpy(path, opt, slen - 1);
 			path[slen - 1] = '\0';
-			printf("Path: %s\n",path);
-
-			dage = get_gps_location(path,&rloc);
-			free(path);
 		}
 
 		i = 0;
@@ -38,12 +34,20 @@ int main(int argc, char **argv)
 			i++;
 		}
 
-		if (dage < 0 && strncmp(copt, "exit", 4) != 0) {
-			printf("Error! Error code is %d.\n",dage);
-			continue;
-		}
-
 		if (strncmp(copt, "exit", 4) != 0) {
+			printf("Path: %s\n",path);
+			rloc.latitude = 0;
+			rloc.longitude = 0;
+			rloc.accuracy = 0;
+
+			dage = get_gps_location(path,&rloc);
+			free(path);
+
+			if (dage < 0 && strncmp(copt, "exit", 4) != 0) {
+				printf("Error! Error code is %d.\n",dage);
+				continue;
+			}
+
 			printf("File name: %s\n",opt);
 			printf("Created at lat : %f\n",rloc.latitude);
 			printf("Created at lod : %f\n",rloc.longitude);

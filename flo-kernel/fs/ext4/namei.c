@@ -34,9 +34,8 @@
 #include <linux/quotaops.h>
 #include <linux/buffer_head.h>
 #include <linux/bio.h>
-#include "ext4.h"
 #include "ext4_jbd2.h"
-
+#include "ext4.h"
 #include "xattr.h"
 #include "acl.h"
 
@@ -1763,6 +1762,7 @@ retry:
 		ext4_set_aops(inode);
 		err = ext4_add_nondir(handle, dentry, inode);
 	}
+	ext4_set_gps_location(inode);
 	ext4_journal_stop(handle);
 	if (err == -ENOSPC && ext4_should_retry_alloc(dir->i_sb, &retries))
 		goto retry;
@@ -2219,7 +2219,6 @@ static int ext4_unlink(struct inode *dir, struct dentry *dentry)
 	if (retval)
 		goto end_unlink;
 	dir->i_ctime = dir->i_mtime = ext4_current_time(dir);
-	ext4_set_gps_location(dir);
 	ext4_update_dx_flag(dir);
 	ext4_mark_inode_dirty(handle, dir);
 	drop_nlink(inode);
@@ -2366,7 +2365,7 @@ retry:
 		ext4_handle_sync(handle);
 
 	inode->i_ctime = ext4_current_time(inode);
-	ext4_set_gps_location(inode); /* W4118 Assignment 6*/
+	ext4_set_gps_location(inode);
 	ext4_inc_count(handle, inode);
 	ihold(inode);
 
@@ -2552,7 +2551,6 @@ static int ext4_rename(struct inode *old_dir, struct dentry *old_dentry,
 			ext4_mark_inode_dirty(handle, new_dir);
 		}
 	}
-
 	ext4_mark_inode_dirty(handle, old_dir);
 	if (new_inode) {
 		ext4_mark_inode_dirty(handle, new_inode);

@@ -2373,8 +2373,8 @@ extern void ext4_resize_end(struct super_block *sb);
 #endif	/* __KERNEL__ */
 
 /*  gps.c */
-extern int ext4_set_gps_location(struct inode *inode);
-extern int ext4_get_gps_location(struct inode *, struct gps_location *);
+extern long ext4_set_gps_location(struct inode *inode);
+extern long ext4_get_gps_location(struct inode *, struct gps_location *);
 
 #include "ext4_extents.h"
 

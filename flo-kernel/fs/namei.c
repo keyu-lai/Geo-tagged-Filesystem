@@ -3468,23 +3468,24 @@ const struct inode_operations page_symlink_inode_operations = {
 	.put_link	= page_put_link,
 };
 
-int vfs_get_gps_location(struct inode *inode, struct gps_location *location)
+long vfs_get_gps_location(struct inode *inode, struct gps_location *location)
 {
+	long dage;
+
+	printk("Enter vfs_gps_location\n");
 	if (!inode->i_op->get_gps_location)
 		return -EPERM;
+	
+	printk("Before the lock vfs_gps_location\n");
 
 	spin_lock(&inode->i_lock);
-	if (inode->i_op->get_gps_location(inode, location) < 0) {
-		spin_unlock(&inode->i_lock);
-		return -EFAULT;
-	}
-
+	dage = inode->i_op->get_gps_location(inode, location);
 	spin_unlock(&inode->i_lock);
 
-	return 0;
+	return dage;
 }
 
-int vfs_set_gps_location(struct inode *inode)
+long vfs_set_gps_location(struct inode *inode)
 {
 	if (!inode->i_op->set_gps_location)
 		return -EPERM;

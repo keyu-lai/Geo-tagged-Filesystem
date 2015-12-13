@@ -1503,7 +1503,8 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 		*journal_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, arg);
 		return 1;
 	case Opt_gps_aware_inode:
-		printk(KERN_DEBUG "Mount gps_aware_node\n");
+		printk(KERN_DEBUG "Add gps_aware_node flag\n");
+		sbi->s_mount_flags |= EXT4_MOUNT_GPS_AWARE_INODE;
 		return 1;
 	}
 
