@@ -19,11 +19,11 @@ int main(int argc, char **argv)
 	opt = (char *)malloc(STR_LEN * sizeof(char));
 	url = "http://maps.google.com/maps?q=";
 
-	if (argc == 2) {
+	if (argc != 0) {
 		path = argv[1];
 		dage = get_gps_location(path,&rloc);
 		
-		if (dage < 0 && strncmp(copt, "exit", 4) != 0) {
+		if (dage < 0) {
 			printf("Error! Error code is %d.\n",dage);
 			return 0;
 		}
