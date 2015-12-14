@@ -1,0 +1,6 @@
+We consulted the following links:
+https://stackoverflow.com/questions/27869570/retrieving-inode-struct-given-the-path-to-a-file
+https://www.kernel.org/doc/Documentation/printk-formats.txt
+http://www-numi.fnal.gov/offline_software/srt_public_context/WebDocs/Errors/unix_system_errors.html
+https://stackoverflow.com/questions/2099070/how-can-i-allocate-memory-in-the-linux-kernel-for-a-char-type-string
+http://www.makelinux.net/ldd3/chp-3-sect-3

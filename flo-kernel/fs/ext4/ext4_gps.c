@@ -28,9 +28,6 @@ long ext4_get_gps_location(struct inode *inode, struct gps_location *location)
 	struct ext4_inode_info *iinfo = EXT4_I(inode);
 	long coord_age;
 
-	//if (!(EXT4_SB(inode->i_sb)->s_mount_flags & EXT4_MOUNT_GPS_AWARE_INODE))
-		//return 0;
-
 	read_lock(&iinfo->i_gps_lock);
 	memcpy(&tmp_loc.latitude, &iinfo->i_latitude, sizeof(long long));
 	memcpy(&tmp_loc.longitude, &iinfo->i_longitude, sizeof(long long));
