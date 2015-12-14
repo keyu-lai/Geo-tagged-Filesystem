@@ -8,13 +8,10 @@ long ext4_set_gps_location(struct inode *inode) {
 	long ts;
 
 	kget_gps_location(&loc, &ts);
-	printk("Time stamp from kernal data is %ld\n",ts);
 	ts = CURRENT_TIME_SEC.tv_sec - ts;
-	printk("Data age %ld\n",ts);
 	if (!(EXT4_SB(inode->i_sb)->s_mount_flags & EXT4_MOUNT_GPS_AWARE_INODE))
 		return 1;
-	
-	printk("Set GPS location successfully for inode at %ld",CURRENT_TIME_SEC.tv_sec);
+
 	write_lock(&iinfo->i_gps_lock);
 	memcpy(&iinfo->i_latitude, &loc.latitude, sizeof(long long));
 	memcpy(&iinfo->i_longitude, &loc.longitude, sizeof(long long));

@@ -53,49 +53,28 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, path_name, struct gps_loc
 	struct gps_location tmp_loc;
 	struct path fp;
 	struct inode *inode;
-	//int luf;
 	int status;
 	int cage = 0;
 	long accuracy;
-	char *from;
 
-	printk(KERN_DEBUG "Enter get_gps_location syscall\n");
-	memcpy(&accuracy, &cur_gloc.accuracy,sizeof(accuracy));
-	printk(KERN_DEBUG "Accuracy:%ld\n",accuracy);
-
-	if (loc == NULL) {
-		printk(KERN_DEBUG "NULL loc\n");
+	if (loc == NULL)
 		return -EINVAL;
-	}
-
-	if (accuracy == -1) {
-		printk(KERN_DEBUG "wrong accuracy\n");
-		return -ENODEV;
-	}
 	
-	from = getname(path_name);
-	if (IS_ERR(from)) {
-		printk(KERN_DEBUG "Wrong name!");
-	}
-
-	if (user_path_at(AT_FDCWD, path_name, LOOKUP_FOLLOW, &fp) < 0) {
-		printk(KERN_DEBUG "wrong path\n");
+	if (user_path_at(AT_FDCWD, path_name, LOOKUP_FOLLOW, &fp) < 0)
 		return -EFAULT;
-	}
 
 	inode = fp.dentry->d_inode;
-	if(inode_permission(inode, MAY_READ) < 0) {
-		printk(KERN_DEBUG "No Permission\n");
+	if(inode_permission(inode, MAY_READ) < 0) 
 		return -EACCES;
-	}
 
 	cage = vfs_get_gps_location(inode, &tmp_loc);
 	status = copy_to_user(loc, &tmp_loc, sizeof(tmp_loc));
-	if (status < 0) {
-		printk(KERN_DEBUG "Negative Status\n");
+	if (status < 0)
 		return -EFAULT;
-	}
-	printk("get data age:%d\n",cage);
+
+	memcpy(&accuracy, &tmp_loc.accuracy,sizeof(accuracy));
+	if (accuracy == -1)
+		return -ENODEV;
 
 	return cage;
 }

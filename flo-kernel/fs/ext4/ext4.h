@@ -673,6 +673,10 @@ struct ext4_inode {
 	__le32  i_crtime;       /* File Creation time */
 	__le32  i_crtime_extra; /* extra FileCreationtime (nsec << 2 | epoch) */
 	__le32  i_version_hi;	/* high 32 bits for 64-bit version */
+	__le64  i_latitude;
+	__le64  i_longitude;
+	__le32  i_accuracy;
+	__le32  i_coord_age;
 };
 
 struct move_extent {
