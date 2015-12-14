@@ -19,6 +19,25 @@ int main(int argc, char **argv)
 	opt = (char *)malloc(STR_LEN * sizeof(char));
 	url = "http://maps.google.com/maps?q=";
 
+	if (argc == 2) {
+		path = argv[1];
+		dage = get_gps_location(path,&rloc);
+		
+		if (dage < 0 && strncmp(copt, "exit", 4) != 0) {
+			printf("Error! Error code is %d.\n",dage);
+			return 0;
+		}
+
+		printf("File name GPS Stat: %s",opt);
+		printf("Latitude : %f\n",rloc.latitude);
+		printf("Longitude : %f\n",rloc.longitude);
+		printf("Data Accuracy: %f\n",rloc.accuracy);
+		printf("Google Map Location: %s%f,%f\n",url,rloc.latitude,rloc.longitude);
+		printf("Data age: %d\n",dage);
+	
+		return 0;
+	}
+
 	while (strncmp(copt, "exit", 4) != 0) {
 		printf("Enter path name: ");
 		slen = getline(&opt, &br, stdin);
