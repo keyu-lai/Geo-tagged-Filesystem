@@ -7,10 +7,12 @@ long ext4_set_gps_location(struct inode *inode) {
 	struct ext4_inode_info *iinfo = EXT4_I(inode);
 	long ts;
 
+	if (!test_opt(inode->i_sb, GPS_AWARE_INODE))
+		return -ENODEV;
 	kget_gps_location(&loc, &ts);
 	ts = CURRENT_TIME_SEC.tv_sec - ts;
-	if (!(EXT4_SB(inode->i_sb)->s_mount_flags & EXT4_MOUNT_GPS_AWARE_INODE))
-		return 1;
+	/*if (!(EXT4_SB(inode->i_sb)->s_mount_flags & EXT4_MOUNT_GPS_AWARE_INODE))
+		return 1;*/
 
 	write_lock(&iinfo->i_gps_lock);
 	memcpy(&iinfo->i_latitude, &loc.latitude, sizeof(long long));
@@ -27,6 +29,9 @@ long ext4_get_gps_location(struct inode *inode, struct gps_location *location)
 	struct gps_location tmp_loc;
 	struct ext4_inode_info *iinfo = EXT4_I(inode);
 	long coord_age;
+
+	if (!test_opt(inode->i_sb, GPS_AWARE_INODE))
+		return -ENODEV;
 
 	read_lock(&iinfo->i_gps_lock);
 	memcpy(&tmp_loc.latitude, &iinfo->i_latitude, sizeof(long long));

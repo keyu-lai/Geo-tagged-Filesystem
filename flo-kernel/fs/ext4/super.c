@@ -1450,8 +1450,8 @@ static const struct mount_opts {
 	{Opt_jqfmt_vfsold, QFMT_VFS_OLD, MOPT_QFMT},
 	{Opt_jqfmt_vfsv0, QFMT_VFS_V0, MOPT_QFMT},
 	{Opt_jqfmt_vfsv1, QFMT_VFS_V1, MOPT_QFMT},
-	{Opt_err, 0, 0},
-	{Opt_gps_aware_inode, EXT4_MOUNT_GPS_AWARE_INODE, MOPT_SET}
+	{Opt_gps_aware_inode, EXT4_MOUNT_GPS_AWARE_INODE, MOPT_SET},
+	{Opt_err, 0, 0}
 };
 
 static int handle_mount_opt(struct super_block *sb, char *opt, int token,
@@ -1511,6 +1511,7 @@ static int handle_mount_opt(struct super_block *sb, char *opt, int token,
 		*journal_ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_BE, arg);
 		return 1;
 	case Opt_gps_aware_inode:
+		set_opt(sb, GPS_AWARE_INODE);
 		sbi->s_mount_flags |= EXT4_MOUNT_GPS_AWARE_INODE;
 		return 1;
 	}
