@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	if (argc != 0) {
 		path = argv[1];
 		dage = get_gps_location(path, &rloc);
-		
+
 		if (dage < 0) {
 			printf("Error! Error code is %d.\n", dage);
 			return 0;
@@ -35,14 +35,14 @@ int main(int argc, char **argv)
 		printf("Google Map Location: %s%f,%f\n",
 				url, rloc.latitude, rloc.longitude);
 		printf("Data age: %d\n", dage);
-	
+
 		return 0;
 	}
 
 	while (strncmp(copt, "exit", 4) != 0) {
 		printf("Enter path name: ");
 		slen = getline(&opt, &br, stdin);
-		
+
 		if (slen > 0) {
 			path = (char *)malloc(slen * sizeof(char));
 			strncpy(path, opt, slen - 1);
@@ -56,25 +56,26 @@ int main(int argc, char **argv)
 		}
 
 		if (strncmp(copt, "exit", 4) != 0) {
-			printf("Path: %s\n",path);
+			printf("Path: %s\n", path);
 			rloc.latitude = 0;
 			rloc.longitude = 0;
 			rloc.accuracy = 0;
 
-			dage = get_gps_location(path,&rloc);
+			dage = get_gps_location(path, &rloc);
 			free(path);
 
 			if (dage < 0 && strncmp(copt, "exit", 4) != 0) {
-				printf("Error! Error code is %d.\n",dage);
+				printf("Error! Error code is %d.\n", dage);
 				continue;
 			}
 
-			printf("File name GPS Stat: %s",opt);
-			printf("Latitude : %f\n",rloc.latitude);
-			printf("Longitude : %f\n",rloc.longitude);
-			printf("Data Accuracy: %f\n",rloc.accuracy);
-			printf("Google Map Location: %s%f,%f\n",url,rloc.latitude,rloc.longitude);
-			printf("Data age: %d\n",dage);
+			printf("File name GPS Stat: %s", opt);
+			printf("Latitude : %f\n", rloc.latitude);
+			printf("Longitude : %f\n", rloc.longitude);
+			printf("Data Accuracy: %f\n", rloc.accuracy);
+			printf("Google Map Location: %s%f,%f\n",
+				url, rloc.latitude, rloc.longitude);
+			printf("Data age: %d\n", dage);
 		}
 	}
 	free(opt);

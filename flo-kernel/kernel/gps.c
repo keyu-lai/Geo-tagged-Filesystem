@@ -52,7 +52,7 @@ SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc)
 }
 
 SYSCALL_DEFINE2(get_gps_location, const char __user *,
-				path_name, struct gps_location __user *,loc)
+				path_name, struct gps_location __user *, loc)
 {
 	struct gps_location tmp_loc;
 	struct path fp;
@@ -68,7 +68,7 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *,
 		return -EFAULT;
 
 	inode = fp.dentry->d_inode;
-	if (inode_permission(inode, MAY_READ) < 0) 
+	if (inode_permission(inode, MAY_READ) < 0)
 		return -EACCES;
 
 	cage = vfs_get_gps_location(inode, &tmp_loc);
@@ -76,7 +76,7 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *,
 	if (status < 0)
 		return -EFAULT;
 
-	memcpy(&accuracy, &tmp_loc.accuracy,sizeof(accuracy));
+	memcpy(&accuracy, &tmp_loc.accuracy, sizeof(accuracy));
 	if (accuracy == -1)
 		return -ENODEV;
 

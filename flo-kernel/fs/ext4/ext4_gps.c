@@ -43,12 +43,12 @@ long ext4_get_gps_location(struct inode *inode, struct gps_location *location)
 	coord_age = *(long *) &iinfo->i_coord_age;
 	read_unlock(&iinfo->i_gps_lock);
 
-	/* 
+	/*
 	 * this is a hack to handle the case of a file with no data.
 	 * if someone really were visit the exact spot (0.0, 0.0)
 	 * and their device were accurate down to 0.0, this would
- 	 * be wrong. but that seems basically impossible
- 	 */
+	 * be wrong. but that seems basically impossible
+	 */
 	memcpy(&longitude, &tmp_loc.longitude, sizeof(__u64));
 	memcpy(&latitude, &tmp_loc.latitude, sizeof(__u64));
 	memcpy(&accuracy, &tmp_loc.accuracy, sizeof(__u32));
@@ -57,3 +57,4 @@ long ext4_get_gps_location(struct inode *inode, struct gps_location *location)
 
 	return coord_age;
 }
+

@@ -23,11 +23,13 @@ static int poll_gps(void)
 
 	if (fgets(str, LIN_LEN, fd) != NULL)
 		sscanf(str, "%lf", &latitude);
-	else accuracy = -1;
+	else
+		accuracy = -1;
 
 	if (fgets(str, LIN_LEN, fd) != NULL)
 		sscanf(str, "%lf", &longitude);
-	else accuracy = -1;
+	else
+		accuracy = -1;
 
 	if (fgets(str, LIN_LEN, fd) != NULL)
 		sscanf(str, "%f", &accuracy);
