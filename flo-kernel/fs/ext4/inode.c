@@ -3659,7 +3659,7 @@ struct inode *ext4_iget(struct super_block *sb, unsigned long ino)
 	ext4_clear_state_flags(ei);	/* Only relevant on 32-bit archs */
 	ei->i_dir_start_lookup = 0;
 	ei->i_dtime = le32_to_cpu(raw_inode->i_dtime);
-	if (test_opt(inode->i_sb,GPS_AWARE_INODE)) {
+	if (test_opt(inode->i_sb, GPS_AWARE_INODE)) {
 		ei->i_latitude = le64_to_cpu(raw_inode->i_latitude);
 		ei->i_longitude = le64_to_cpu(raw_inode->i_longitude);
 		ei->i_accuracy = le32_to_cpu(raw_inode->i_accuracy);
@@ -3921,7 +3921,7 @@ static int ext4_do_update_inode(handle_t *handle,
 	if (ext4_inode_blocks_set(handle, raw_inode, ei))
 		goto out_brelse;
 	raw_inode->i_dtime = cpu_to_le32(ei->i_dtime);
-	if (test_opt(inode->i_sb,GPS_AWARE_INODE)) {
+	if (test_opt(inode->i_sb, GPS_AWARE_INODE)) {
 		raw_inode->i_latitude = cpu_to_le64(ei->i_latitude);
 		raw_inode->i_longitude = cpu_to_le64(ei->i_longitude);
 		raw_inode->i_accuracy = cpu_to_le32(ei->i_accuracy);

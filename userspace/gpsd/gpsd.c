@@ -6,7 +6,8 @@
 
 #define LIN_LEN 100
 
-static int poll_gps() {
+static int poll_gps(void)
+{
 	double latitude;
 	double longitude;
 	float accuracy;
@@ -15,22 +16,23 @@ static int poll_gps() {
 	struct gps_location loc;
 	FILE *fd = fopen(GPS_LOCATION_FILE, "r");
 
-	if (!fd){
+	if (!fd) {
 		perror("Error! Can not open gps_location file.\n");
 		accuracy = -1;
 	}
 
 	if (fgets(str, LIN_LEN, fd) != NULL)
-		sscanf(str, "%lf",&latitude);
+		sscanf(str, "%lf", &latitude);
 	else accuracy = -1;
 
 	if (fgets(str, LIN_LEN, fd) != NULL)
-		sscanf(str, "%lf",&longitude);
+		sscanf(str, "%lf", &longitude);
 	else accuracy = -1;
 
 	if (fgets(str, LIN_LEN, fd) != NULL)
-		sscanf(str, "%f",&accuracy);
-	else accuracy = -1;
+		sscanf(str, "%f", &accuracy);
+	else
+		accuracy = -1;
 
 	fclose(fd);
 
@@ -54,9 +56,8 @@ int main(int argc, char *argv[])
 		exit(EXIT_FAILURE);
 	}
 
-	if (pid > 0) {
+	if (pid > 0)
 		exit(EXIT_SUCCESS);
-	}
 
 	if (setsid() < 0) {
 		perror("Error ! Fail to setsid\n");
@@ -64,12 +65,12 @@ int main(int argc, char *argv[])
 	}
 	chdir("/data/misc");
 	umask(0);
-	printf("%d",pid);
+	printf("%d", pid);
 	close(0);
 	close(1);
 	close(2);
-	
-	while(1) {
+
+	while (1) {
 		poll_gps();
 		usleep(1000);
 	}

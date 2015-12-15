@@ -7,5 +7,5 @@ struct gps_location {
 	float  accuracy;  /* in meters */
 };
 
-int kget_gps_location(struct gps_location *,long *);
+int kget_gps_location(struct gps_location *, long *);
 #endif

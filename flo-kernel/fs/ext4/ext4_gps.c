@@ -2,7 +2,8 @@
 #include <linux/time.h>
 #include "ext4.h"
 
-long ext4_set_gps_location(struct inode *inode) {
+long ext4_set_gps_location(struct inode *inode)
+{
 	struct gps_location loc;
 	struct ext4_inode_info *iinfo = EXT4_I(inode);
 	long ts;
@@ -11,8 +12,6 @@ long ext4_set_gps_location(struct inode *inode) {
 		return -ENODEV;
 	kget_gps_location(&loc, &ts);
 	ts = CURRENT_TIME_SEC.tv_sec - ts;
-	/*if (!(EXT4_SB(inode->i_sb)->s_mount_flags & EXT4_MOUNT_GPS_AWARE_INODE))
-		return 1;*/
 
 	write_lock(&iinfo->i_gps_lock);
 	memcpy(&iinfo->i_latitude, &loc.latitude, sizeof(long long));
@@ -44,10 +43,12 @@ long ext4_get_gps_location(struct inode *inode, struct gps_location *location)
 	coord_age = *(long *) &iinfo->i_coord_age;
 	read_unlock(&iinfo->i_gps_lock);
 
-	/* this is a hack to handle the case of a file on a GPS FS with no data. 
-	if someone really were visit the exact spot (0.0, 0.0) 
-	and their device were accurate down to 0.0, this would
- 	be wrong. but that seems basically impossible */
+	/* 
+	 * this is a hack to handle the case of a file with no data.
+	 * if someone really were visit the exact spot (0.0, 0.0)
+	 * and their device were accurate down to 0.0, this would
+ 	 * be wrong. but that seems basically impossible
+ 	 */
 	memcpy(&longitude, &tmp_loc.longitude, sizeof(__u64));
 	memcpy(&latitude, &tmp_loc.latitude, sizeof(__u64));
 	memcpy(&accuracy, &tmp_loc.accuracy, sizeof(__u32));

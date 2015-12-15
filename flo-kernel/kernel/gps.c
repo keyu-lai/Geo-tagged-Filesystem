@@ -19,7 +19,8 @@ static struct gps_location cur_gloc = {
 
 static long upd_tim_stm;
 
-int kget_gps_location(struct gps_location *rloc, long *ts) {	
+int kget_gps_location(struct gps_location *rloc, long *ts)
+{
 	read_lock(&cur_gloc_lock);
 	memcpy(rloc, &cur_gloc, sizeof(cur_gloc));
 	*ts = upd_tim_stm;
@@ -28,7 +29,8 @@ int kget_gps_location(struct gps_location *rloc, long *ts) {
 	return 0;
 }
 
-SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc) {
+SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc)
+{
 	struct gps_location tmp_loc;
 
 	if (current_uid() != 0)
@@ -43,13 +45,15 @@ SYSCALL_DEFINE1(set_gps_location, struct gps_location __user *, loc) {
 	write_lock(&cur_gloc_lock);
 	memcpy(&cur_gloc, &tmp_loc, sizeof(tmp_loc));
 	upd_tim_stm = CURRENT_TIME_SEC.tv_sec;
-	printk("Daemon set data at %ld\n",upd_tim_stm);
+	printk("Daemon set data at %ld\n", upd_tim_stm);
 	write_unlock(&cur_gloc_lock);
 
 	return 0;
 }
 
-SYSCALL_DEFINE2(get_gps_location, const char __user *, path_name, struct gps_location __user *,loc) {
+SYSCALL_DEFINE2(get_gps_location, const char __user *,
+				path_name, struct gps_location __user *,loc)
+{
 	struct gps_location tmp_loc;
 	struct path fp;
 	struct inode *inode;
@@ -59,12 +63,12 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, path_name, struct gps_loc
 
 	if (loc == NULL)
 		return -EINVAL;
-	
+
 	if (user_path_at(AT_FDCWD, path_name, LOOKUP_FOLLOW, &fp) < 0)
 		return -EFAULT;
 
 	inode = fp.dentry->d_inode;
-	if(inode_permission(inode, MAY_READ) < 0) 
+	if (inode_permission(inode, MAY_READ) < 0) 
 		return -EACCES;
 
 	cage = vfs_get_gps_location(inode, &tmp_loc);
@@ -78,3 +82,4 @@ SYSCALL_DEFINE2(get_gps_location, const char __user *, path_name, struct gps_loc
 
 	return cage;
 }
+

@@ -977,7 +977,7 @@ static void ext4_destroy_inode(struct inode *inode)
 
 static void init_once(void *foo)
 {
-	long fzero =0;
+	long fzero = 0;
 	long long dzero = 0;
 
 	struct ext4_inode_info *ei = (struct ext4_inode_info *) foo;
@@ -1274,7 +1274,7 @@ static const match_table_t tokens = {
 	{Opt_removed, "reservation"},	/* mount option from ext2/3 */
 	{Opt_removed, "noreservation"}, /* mount option from ext2/3 */
 	{Opt_removed, "journal=%u"},	/* mount option from ext2/3 */
-	{Opt_gps_aware_inode, "gps_aware_inode"}, /* mount option for W4118 assignment*/
+	{Opt_gps_aware_inode, "gps_aware_inode"}, /* mount option for team5 */
 	{Opt_err, NULL},
 };
 
